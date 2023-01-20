@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import requests, json, subprocess, argparse, tempfile, shutil, sys, getpass, keyring
+import requests, subprocess, argparse, tempfile, shutil, sys, getpass, keyring, readline
 exit = sys.exit
 
 def launchMT(mtpath, host, port, name, passwd):
@@ -63,11 +63,6 @@ if __name__ == "__main__":
             print("If this is wrong, specify one in --minetest-path.")
     else:
         print("Using user-provided Minetest executeable path: " + mtpath)
-    try:
-        open(mtpath,"r").close()
-    except OSError:
-        print("Unable to access Minetest executeable!")
-        raise
 
     # download serverlist
     try:

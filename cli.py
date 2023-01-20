@@ -40,9 +40,7 @@ def const_entry(x,item):
     return str(x).zfill(3) + ". " + item["name"] + " (" + item["address"] + ":" + str(item["port"]) + ") " + const_serverflag(item)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-                    prog = 'MTLaunch',
-                    description = 'Minetest Launcher with password saving')
+    parser = argparse.ArgumentParser(description = 'Minetest Launcher with password saving')
     parser.add_argument('-m', '--minetest-path', help = "Executeable of the Minetest client. Default: Find in $PATH",
                         dest = "mtpath")
     parser.add_argument('-p', '--protocol', type = int, dest = "protocol",

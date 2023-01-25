@@ -157,6 +157,7 @@ if __name__ == "__main__":
                     continue
                 print("Launching Minetest...")
                 launchMT(mtpath, item["address"], item["port"], uname, passwd)
+                exit(0)
             except ValueError:
                 # Fallback to search mode, prompt = query
                 prompts = prompt.split(" ")

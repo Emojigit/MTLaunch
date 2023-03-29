@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-import requests, subprocess, argparse, tempfile, shutil, sys, getpass, keyring, readline
+import requests, subprocess, argparse, tempfile, shutil, sys, getpass, keyring, readline, os.path as path
 exit = sys.exit
 
 def launchMT(mtpath, host, port, name, passwd):
+    logpath = path.join(tempfile.gettempdir(),"mtlaunch-log-" + host + "_" + str(port) + ".txt")
+    print("Logging at: " + logpath)
     passwdFile = tempfile.NamedTemporaryFile(mode="w")
     try:
         passwdFile.write(passwd)
         passwdFilePath = passwdFile.file.name
         passwdFile.flush()
         try:
-            completed = subprocess.run([mtpath,"--address",host,"--port",str(port),"--name",name,"--password-file",passwdFilePath,"--go"])
+            completed = subprocess.run([mtpath,"--address",host,"--port",str(port),"--name",name,"--password-file",passwdFilePath,"--logfile",logpath,"--go"])
         except KeyboardInterrupt:
             pass
         return completed
@@ -121,7 +123,7 @@ if __name__ == "__main__":
                 if "version" in item:
                     print("Version: " + item["version"])
                 if "clients" in item and "clients_max" in item:
-                    print("Players: " + str(item["clients"]) + "/" + str(item["clients_max"]))
+                    print("Players: " + str(item["clients"]) + "/" + str(item["clients_max"]) + " (" + ", ".join(item["clients_list"]) + ")")
                 if "privs" in item:
                     print("Default Privileges: " + item["privs"])
                 print("Flags: " + const_serverflag(item))

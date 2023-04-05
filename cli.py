@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import requests, subprocess, argparse, tempfile, shutil, sys, getpass, keyring, readline, os.path as path
+import requests, subprocess, argparse, tempfile, shutil, sys, getpass, keyring, readline, os.path as path, readchar
 exit = sys.exit
 
 def launchMT(mtpath, host, port, name, passwd):
@@ -12,9 +12,9 @@ def launchMT(mtpath, host, port, name, passwd):
         passwdFile.flush()
         try:
             completed = subprocess.run([mtpath,"--address",host,"--port",str(port),"--name",name,"--password-file",passwdFilePath,"--logfile",logpath,"--go"])
+            print("Minetest exited with status code " + str(completed.returncode))
         except KeyboardInterrupt:
-            pass
-        return completed
+            print("Status code check interrupted.")
     finally:
         passwdFile.close()
 
@@ -140,9 +140,19 @@ if __name__ == "__main__":
                         keyringpass = None
                     passwd = None
                     if keyringpass != None:
-                        ask = input("Password found in keyring. Do you want to use that one? (Y/n) ").lower()
-                        if ask[0] != "n":
-                            passwd = keyringpass
+                        print("Password found in keyring. Do you want to use that one? (Y/n) ",end='')
+                        sys.stdout.flush()
+                        while True:
+                            ask = readchar.readchar().lower()
+                            if ask == readchar.key.CTRL_C:
+                                raise KeyboardInterrupt
+                            elif ask[0] == "y":
+                                passwd = keyringpass
+                                print("Yes")
+                                break
+                            elif ask[0] == "n":
+                                print("No")
+                                break
                     if passwd == None:
                         passwd = getpass.getpass("Password: ")
                         if passwd == ":exit":

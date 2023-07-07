@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import requests, subprocess, argparse, tempfile, shutil, sys, getpass, keyring, readline, os.path as path, readchar
+from requests.exceptions import Timeout as RequestTimeout
 exit = sys.exit
 
 def launchMT(mtpath, host, port, name, passwd):
@@ -19,7 +20,7 @@ def launchMT(mtpath, host, port, name, passwd):
         passwdFile.close()
 
 def download_serverlist(url):
-    R = requests.get(url)
+    R = requests.get(url, timeout=300)
     if R.status_code != 200:
         raise requests.HTTPError(responce=R)
     return R.json()
@@ -71,6 +72,9 @@ if __name__ == "__main__":
         serverlist = download_serverlist(args.serverlist)
     except requests.HTTPError:
         print("Serverlist not found. Please check the entered URL.")
+        raise
+    except RequestTimeout:
+        print("Fetching the server list timed out.")
         raise
     except requests.RequestException:
         print("A connection exception occured. Please check your internet connection.")

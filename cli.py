@@ -70,6 +70,9 @@ if __name__ == "__main__":
     # download serverlist
     try:
         serverlist = download_serverlist(args.serverlist)
+    except KeyboardInterrupt:
+        print("\033[K\rInterrupted.")
+        exit(128)
     except requests.HTTPError:
         print("Serverlist not found. Please check the entered URL.")
         raise
@@ -109,7 +112,7 @@ if __name__ == "__main__":
         noshow = False
         try:
             prompt = input("> ")
-        except KeyboardInterrupt:
+        except (KeyboardInterrupt, EOFError):
             print()
             exit(0)
         if prompt != "":
@@ -168,7 +171,7 @@ if __name__ == "__main__":
                                 keyring.set_password(args.keyring,uname + "@" + item["address"] + ":" + str(item["port"]),passwd)
                             except keyring.errors.KeyringError:
                                 print("ERROR: Password cannot be set. Please check your keyring settings.")
-                except KeyboardInterrupt:
+                except (KeyboardInterrupt, EOFError):
                     print()
                     continue
                 print("Launching Minetest...")

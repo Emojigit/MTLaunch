@@ -74,10 +74,8 @@ def get_yn(q: str, default: bool = True) -> bool:
     print(q + (" (Y/n) " if default else " (y/N) "), end='')
     sys.stdout.flush()
     while True:
-        ask = readchar.readchar()
-        if ask == readchar.key.CTRL_C:
-            raise KeyboardInterrupt
-        elif ask == readchar.key.ENTER:
+        ask = readchar.readkey()
+        if ask == readchar.key.ENTER:
             if default:
                 print("Yes")
                 return True

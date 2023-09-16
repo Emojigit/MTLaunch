@@ -7,7 +7,6 @@ import shutil
 import sys
 import getpass
 import keyring
-import readline
 import os.path as path
 import readchar
 from requests.exceptions import Timeout as RequestTimeout

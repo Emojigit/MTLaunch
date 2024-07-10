@@ -29,7 +29,7 @@ def launchMT(mtpath, host, port, name, passwd):
                                         "--name", name,
                                         "--password-file", passwdFilePath,
                                         "--logfile", logpath,
-                                        "--go"])
+                                        "--go"], check=False)
             print("Minetest exited with status code " +
                   str(completed.returncode))
         except KeyboardInterrupt:
@@ -139,7 +139,7 @@ if __name__ == "__main__":
     serverlistlist = serverlist["list"]
     if args.protocol != None:
         for x in list(serverlistlist):
-            if args.protocol < x.proto_min or args.protocol > x.proto_max:
+            if args.protocol < x["proto_min"] or args.protocol > x["proto_max"]:
                 serverlistlist.remove(x)
     serverlistlistlen = len(serverlistlist)
 
@@ -184,8 +184,12 @@ if __name__ == "__main__":
                 if "version" in item:
                     print("Version: " + item["version"])
                 if "clients" in item and "clients_max" in item:
-                    print("Players: " + str(item["clients"]) + "/" +
-                          str(item["clients_max"]) + " (" + ", ".join(item["clients_list"]) + ")")
+                    print(
+                        "Players: " + str(item["clients"]) + "/" + str(item["clients_max"]), end="")
+                if "clients_list" in item:
+                    print(" (" + ", ".join(item["clients_list"]) + ")")
+                else:
+                    print("")
                 if "privs" in item:
                     print("Default Privileges: " + item["privs"])
                 print("Flags: " + const_serverflag(item))
@@ -231,11 +235,11 @@ if __name__ == "__main__":
                 exit(0)
             except ValueError:
                 # Fallback to search mode, prompt = query
-                prompts = prompt.split(" ")
+                prompts = prompt.lower().split(" ")
                 results = []
                 for i, x in enumerate(serverlistlist):
                     for y in prompts:
-                        if y in x["name"] or y in x["address"]:
+                        if y in x["name"].lower() or y in x["address"].lower():
                             results.append((i, x))
                             break
                 if len(results) == 0:

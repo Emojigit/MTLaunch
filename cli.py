@@ -208,12 +208,12 @@ if __name__ == "__main__":
                               "Please check your keyring settings.")
                         keyringpass = None
                     passwd = None
-                    if keyringpass != None:
+                    if keyringpass is not None:
                         result = get_yn(
                             "Password found in keyring. Do you want to use that one?", True)
                         if result:
                             passwd = keyringpass
-                    if passwd == None:
+                    if passwd is None:
                         passwd = getpass.getpass("Password: ")
                         if passwd == ":exit":
                             continue

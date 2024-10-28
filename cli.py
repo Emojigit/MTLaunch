@@ -104,9 +104,9 @@ if __name__ == "__main__":
 
     # Find where Minetest is
     mtpath = args.mtpath
-    if mtpath == None:
-        mtpath = shutil.which("minetest")
-        if mtpath == None:
+    if mtpath is None:
+        mtpath = shutil.which("luanti") or shutil.which("minetest")
+        if mtpath is None:
             print("Minetest executeable not found. " +
                   "Please specify one in --minetest-path.")
             exit(1)
